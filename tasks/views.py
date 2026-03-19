@@ -1,4 +1,5 @@
-from rest_framework import permissions, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets, filters
 from rest_framework.exceptions import PermissionDenied
 
 from teams.permissions import is_team_member
@@ -13,6 +14,11 @@ from .serializers import TaskSerializer, CommentSerializer
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated, IsTaskReadableByTeamMemberEditableByStakeholders]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ["project", "status", "priority", "assigned_to", "created_by"]
+    search_fields = ["title", "description", "project__name", "created_by__username", "assigned_to__username"]
+    ordering_fields = ["created_at", "updated_at", "due_date", "priority", "status", "title"]
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = Task.objects.select_related(
@@ -28,16 +34,19 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         project = serializer.validated_data["project"]
-
         if not is_team_member(self.request.user, project.team):
             raise PermissionDenied("You must be a member of the team to create tasks in this project.")
-
         serializer.save(created_by=self.request.user)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated, IsCommentReadableByTeamMemberEditableByAuthorOrAdmin]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ["task", "author"]
+    search_fields = ["content", "author__username", "task__title"]
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = Comment.objects.select_related(
@@ -53,8 +62,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         task = serializer.validated_data["task"]
-
         if not is_team_member(self.request.user, task.project.team):
             raise PermissionDenied("You must be a member of the team to comment on this task.")
-
         serializer.save(author=self.request.user)
