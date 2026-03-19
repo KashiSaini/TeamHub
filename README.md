@@ -847,7 +847,6 @@ If development continues, good next steps would be:
 - add unread notification count API
 - add mark-as-read notification endpoint
 - add file uploads / attachments
-- add pagination and filtering to all list APIs
 - add Docker and deployment files
 - add OpenAPI / Swagger docs
 - add background tasks for heavy async work
@@ -869,5 +868,6 @@ It is a structured Django mastery project built to learn:
 - Channels
 - realtime systems
 - deployment thinking
+- filter and pagination
 
 The project was intentionally built **phase by phase** so every new concept was connected to a real use case.
