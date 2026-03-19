@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
+    "drf_spectacular",
     "django_filters",
 
     "accounts.apps.AccountsConfig",
@@ -102,6 +103,9 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 REST_FRAMEWORK = {
+
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -161,4 +165,11 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "TeamHub API",
+    "DESCRIPTION": "Team collaboration and task management backend",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

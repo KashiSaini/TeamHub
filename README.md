@@ -848,7 +848,6 @@ If development continues, good next steps would be:
 - add mark-as-read notification endpoint
 - add file uploads / attachments
 - add Docker and deployment files
-- add OpenAPI / Swagger docs
 - add background tasks for heavy async work
 
 ---
@@ -869,5 +868,6 @@ It is a structured Django mastery project built to learn:
 - realtime systems
 - deployment thinking
 - filter and pagination
+- drf-spectacular (OpenAPI Docs)
 
 The project was intentionally built **phase by phase** so every new concept was connected to a real use case.
